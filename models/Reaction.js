@@ -16,7 +16,7 @@ const reactionSchema = new Section ({
     },
     createdAt: {
       type: Date,
-      default: Date.now(),
+      default: Date.now,
       get: val => moment(val).format('L [@] LT'),
     }
   },
