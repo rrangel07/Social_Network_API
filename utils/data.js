@@ -124,5 +124,23 @@ const getRandomFriends = (n,currentUserId,userId) => {
   }
   return friends;
 }
+
+const getRandomThoughts = (m,n) => {
+  let thoughts=[];
+  for (let i = 0; i < m; i++) {
+    const thoughtText = getRandomArrItem(possibleThoughts);
+    let reactions = [];
+    for (let j = 0; j < n; j++) {
+  let reactions =[];
+      const reactionBody = getRandomArrItem(possibleReactions);
+      reactions.push({reactionBody});
+    }
+    thoughts.push({
+      thoughtText,
+      reactions
+    })
+  }
+  return thoughts;
+}
 // Export the functions for use in seed.js
-module.exports = { getRandomUserName, getRandomFriends, getRandomArrItem };
+module.exports = { getRandomUserName, getRandomFriends, getRandomArrItem, getRandomThoughts };
