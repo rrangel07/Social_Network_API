@@ -125,15 +125,19 @@ const getRandomFriends = (n,currentUserId,userId) => {
   return friends;
 }
 
-const getRandomThoughts = (m,n) => {
+const getRandomThoughts = (m,n,userArray) => {
   let thoughts=[];
   for (let i = 0; i < m; i++) {
     const thoughtText = getRandomArrItem(possibleThoughts);
-    let reactions = [];
+    let reactions =[];
     for (let j = 0; j < n; j++) {
-  let reactions =[];
       const reactionBody = getRandomArrItem(possibleReactions);
-      reactions.push({reactionBody});
+      const userName = getRandomArrItem(userArray).userName;
+      reactions.push({
+        reactionBody,
+        userName
+      });
+      console.log ('AQUI',userName);
     }
     thoughts.push({
       thoughtText,

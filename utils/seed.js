@@ -45,7 +45,7 @@ connection.once('open', async () => {
     );
   };
   // Get some random thoughts objects using a helper function that we imported from ./data
-  const thoughts = getRandomThoughts (20,2);
+  const thoughts = getRandomThoughts (20,2,users);
   // Add thoughts to the collection and await the results
   await Thought.collection.insertMany(thoughts);
   // Get thoughts from DB
