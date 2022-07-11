@@ -1,6 +1,7 @@
 const { Schema, Types } = require('mongoose');
+const moment = require('moment');
 
-const reactionSchema = new Section ({
+const reactionSchema = new Schema ({
     reactionId: {
       type: Schema.Types.ObjectId,
       default: () => new Types.ObjectId(),
@@ -10,13 +11,13 @@ const reactionSchema = new Section ({
       required: true,
       maxLength: 280,
     },
-    username: {
+    userName: {
       type: String,
       required: true,
     },
     createdAt: {
       type: Date,
-      default: Date.now(),
+      default: Date.now,
       get: val => moment(val).format('L [@] LT'),
     }
   },
