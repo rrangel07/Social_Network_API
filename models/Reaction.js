@@ -22,9 +22,10 @@ const reactionSchema = new Schema ({
     }
   },
   {
+    id: false,
+    _id: false,
     toJSON: {
       getters: true,
-      id: false,
     },
 });
 

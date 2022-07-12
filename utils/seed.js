@@ -51,7 +51,7 @@ connection.once('open', async () => {
   const thoughts = getRandomThoughts (20,2,users);
   // console.log(thoughts);
   // Add thoughts to the collection and await the results
-  await Thought.collection.insertMany(thoughts);
+  await Thought.create(thoughts);
   // Get thoughts from DB
   const thoughtsID = await Thought.find({});
   console.log(thoughtsID);
