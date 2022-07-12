@@ -10,7 +10,6 @@ const User = require('../models/User')
       }
       res.status(400);
     } catch (error) {
-      console.log(error);
       res.status(500).json({ message: 'Internal Server Error' });
     }
   },
@@ -22,7 +21,7 @@ const User = require('../models/User')
         res.status(200).json(thoughtData);
         return;
       }
-      res.status(404);
+      res.status(404).json({ message: 'No thought associated to that ID' });
     } catch (error) {
       res.status(500).json({ message: 'Internal Server Error' });
     }
@@ -30,8 +29,10 @@ const User = require('../models/User')
 
   async createThought (req,res) {
     try {
-      const thoughtData = await Thought.create(req.body)
+      const thoughtData = await Thought.create(req.body);
       if (thoughtData) {
+        await User.findByIdAndUpdate({_id: req.body.userId},
+        { $addToSet: { thoughts: thoughtData._id }});
         res.status(200).json(thoughtData);
         return;
       }
@@ -43,12 +44,12 @@ const User = require('../models/User')
 
   async updateThought (req,res) {
     try {
-      const thoughtData = await Thought.findByIdAndUpdate(req.params.userId,{ $set: req.body },{ new: true, runValidators: true });
+      const thoughtData = await Thought.findByIdAndUpdate(req.params.thoughtId,{ $set: req.body },{ new: true, runValidators: true });
       if (thoughtData) {
         res.status(200).json(thoughtData);
         return;
       }
-      res.status(400);
+      res.status(404).json({ message: 'No thought associated to that ID' });
     } catch (error) {
       res.status(500).json({ message: 'Internal Server Error' });
     }
@@ -56,12 +57,12 @@ const User = require('../models/User')
 
   async deleteThought (req,res) {
     try {
-      const thoughtData = await Thought.findByIdAndDelete(req.params.userId);
+      const thoughtData = await Thought.findByIdAndDelete(req.params.thoughtId);
       if (thoughtData) {
         res.status(200).json(thoughtData);
         return;
       }
-      res.status(400);
+      res.status(404).json({ message: 'No thought associated to that ID' });
     } catch (error) {
       res.status(500).json({ message: 'Internal Server Error' });
     }
@@ -69,14 +70,14 @@ const User = require('../models/User')
 
   async newReaction (req,res) {
     try {
-      const thoughtData = await Thought.findByIdAndUpdate(req.params.userId,
-        { $addToSet: { friends: req.params.friendId }},
+      const thoughtData = await Thought.findByIdAndUpdate(req.params.thoughtId,
+        { $addToSet: { reactions: req.body }},
         { new: true, runValidators: true });
       if (thoughtData) {
         res.status(200).json(thoughtData);
         return;
       }
-      res.status(400);
+      res.status(404).json({ message: 'No thought associated to that ID' });
     } catch (error) {
       res.status(500).json({ message: 'Internal Server Error' });
     }
@@ -84,14 +85,14 @@ const User = require('../models/User')
 
   async deleteReaction (req,res) {
     try {
-      const thoughtData = await Thought.findByIdAndUpdate(req.params.userId,
-        { $pull: { friends: req.params.friendId }},
+      const thoughtData = await Thought.findByIdAndUpdate(req.params.thoughtId,
+        { $pull: { reactions: req.body }},
         { new: true, runValidators: true });
       if (thoughtData) {
         res.status(200).json(thoughtData);
         return;
       }
-      res.status(400);
+      res.status(404).json({ message: 'No thought associated to that ID' });
     } catch (error) {
       res.status(500).json({ message: 'Internal Server Error' });
     }

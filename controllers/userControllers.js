@@ -1,4 +1,6 @@
-const User = require('../models/User')
+const User = require('../models/User');
+const Thought = require('../models/Thought');
+
  module.exports = {
    async getUsers (req,res) {
     try {
@@ -9,7 +11,7 @@ const User = require('../models/User')
         res.status(200).json(userData);
         return;
       }
-      res.status(404);
+      res.status(404).json({ message: 'Nothing found' });
     } catch (error) {
       console.log(error);
       res.status(500).json({ message: 'Internal Server Error' });
@@ -25,7 +27,7 @@ const User = require('../models/User')
         res.status(200).json(userData);
         return;
       }
-      res.status(404);
+      res.status(404).json({ message: 'No user associated to that ID' });
     } catch (error) {
       res.status(500).json({ message: 'Internal Server Error' });
     }
@@ -33,7 +35,7 @@ const User = require('../models/User')
 
   async createUser (req,res) {
     try {
-      const userData = await User.create(req.body)
+      const userData = await User.create(req.body);
       if (userData) {
         res.status(200).json(userData);
         return;
@@ -46,12 +48,13 @@ const User = require('../models/User')
 
   async updateUser (req,res) {
     try {
-      const userData = await User.findByIdAndUpdate(req.params.userId,{ $set: req.body },{ new: true, runValidators: true });
+      const userData = await User.findByIdAndUpdate(req.params.userId,{ $set: req.body },
+      { new: true, runValidators: true });
       if (userData) {
         res.status(200).json(userData);
         return;
       }
-      res.status(400);
+      res.status(404).json({ message: 'No user associated to that ID' });
     } catch (error) {
       res.status(500).json({ message: 'Internal Server Error' });
     }
@@ -61,10 +64,11 @@ const User = require('../models/User')
     try {
       const userData = await User.findByIdAndDelete(req.params.userId);
       if (userData) {
+        await Thought.deleteMany({ username: userData.userName });
         res.status(200).json(userData);
         return;
       }
-      res.status(400);
+      res.status(404).json({ message: 'No user associated to that ID' });
     } catch (error) {
       res.status(500).json({ message: 'Internal Server Error' });
     }
@@ -72,14 +76,19 @@ const User = require('../models/User')
 
   async newFriend (req,res) {
     try {
-      const userData = await User.findByIdAndUpdate(req.params.userId,
+      //Add friend 'friendId' to 'userId'
+      const userData1 = await User.findByIdAndUpdate(req.params.userId,
         { $addToSet: { friends: req.params.friendId }},
         { new: true, runValidators: true });
-      if (userData) {
-        res.status(200).json(userData);
+      //Add friend 'userId' to 'friendId'
+        const userData2 = await User.findByIdAndUpdate(req.params.friendId,
+          { $addToSet: { friends: req.params.userId }},
+          { new: true, runValidators: true });
+      if (userData1 && userData1) {
+        res.status(200).json([userData1,userData2]);
         return;
       }
-      res.status(400);
+      res.status(404).json({ message: 'No user associated to that ID' });
     } catch (error) {
       res.status(500).json({ message: 'Internal Server Error' });
     }
@@ -94,7 +103,7 @@ const User = require('../models/User')
         res.status(200).json(userData);
         return;
       }
-      res.status(400);
+      res.status(404).json({ message: 'No user associated to that ID' });
     } catch (error) {
       res.status(500).json({ message: 'Internal Server Error' });
     }
