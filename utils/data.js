@@ -87,7 +87,7 @@ const possibleReactions = [
 ];
 
 const possibleThoughts = [
-  'One for all and all for one, Muskehounds are always ready. One for all and all for one, helping everybody. One for all and all for one, it\'s a pretty story. Sharing everything with fun, that\'s the way to be. One for all and all for one, Muskehounds are always ready. One for all and all for one, helping everybody. One for all and all for one, can sound pretty corny. If you\'ve got a problem chum, think how it could be.',
+  'One for all and all for one, Muskehounds are always ready. One for all and all for one, helping everybody. One for all and all for one, it\'s a pretty story. Sharing everything with fun, that\'s the way to be. One for all and all for one, Muskehounds are always ready.',
   'Children of the sun, see your time has just begun, searching for your ways, through adventures every day. Every day and night, with the condor in flight, with all your friends in tow, you search for the Cities of Gold.',
   'I never spend much time in school but I taught ladies plenty. It\'s true I hire my body out for pay, hey hey',
   'Top Cat! The most effectual Top Cat! Who\'s intellectual close friends get to call him T.C., providing it\'s with dignity',
@@ -124,27 +124,42 @@ const getRandomFriends = (n,currentUserId,userId) => {
   }
   return friends;
 }
-
+//Generate an 'm' number of thoughts with 'n' number of reactions
 const getRandomThoughts = (m,n,userArray) => {
   let thoughts=[];
   for (let i = 0; i < m; i++) {
     const thoughtText = getRandomArrItem(possibleThoughts);
     let reactions =[];
     for (let j = 0; j < n; j++) {
-      const reactionBody = getRandomArrItem(possibleReactions);
-      const userName = getRandomArrItem(userArray).userName;
+      let reactionBody = getRandomArrItem(possibleReactions);
+      let userName = getRandomArrItem(userArray).userName;
       reactions.push({
         reactionBody,
         userName
       });
-      console.log ('AQUI',userName);
     }
+    let username = getRandomArrItem(userArray).userName;
     thoughts.push({
       thoughtText,
-      reactions
-    })
+      reactions,
+      username
+    });
   }
   return thoughts;
 }
+// const getRandomReactions = (n,userArray) => {
+//   let reactions =[];
+//   for (let j = 0; j < n; j++) {
+//     let reactionBody = '';
+//     let userName = '';
+//     reactionBody = getRandomArrItem(possibleReactions);
+//     userName = getRandomArrItem(userArray).userName;
+//     reactions.push({
+//       reactionBody,
+//       userName
+//     });
+//   }
+//   return reactions;
+// }
 // Export the functions for use in seed.js
 module.exports = { getRandomUserName, getRandomFriends, getRandomArrItem, getRandomThoughts };
