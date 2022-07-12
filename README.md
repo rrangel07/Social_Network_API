@@ -78,7 +78,7 @@ To get a recorded demostration of the app usage click [here](https://drive.googl
 
 ## Tests
 
-No tests provided for this app
+No tests provided for this app.
 
 ## Credits
 
