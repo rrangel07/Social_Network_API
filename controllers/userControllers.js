@@ -4,12 +4,12 @@ const User = require('../models/User')
     try {
       const userData = await User.find({}).populate([
         {path: 'friends'},
-        {path: 'thoughts'}]);
+        {path: 'thoughts', select: '-__v'}]);
       if (userData) {
         res.status(200).json(userData);
         return;
       }
-      res.status(400);
+      res.status(404);
     } catch (error) {
       console.log(error);
       res.status(500).json({ message: 'Internal Server Error' });
@@ -18,12 +18,12 @@ const User = require('../models/User')
 
   async getSingleUser (req,res) {
     try {
-      const userData = await User.findOne({ _id: req.params._id.userId }).populate('thoughts').populate('friends');
+      const userData = await User.findOne({ _id: req.params.userId }).populate('thoughts').populate('friends');
       if (userData) {
         res.status(200).json(userData);
         return;
       }
-      res.status(400);
+      res.status(404);
     } catch (error) {
       res.status(500).json({ message: 'Internal Server Error' });
     }
@@ -31,7 +31,7 @@ const User = require('../models/User')
 
   async createUser (req,res) {
     try {
-      const userData = await User.create(req.body )
+      const userData = await User.create(req.body)
       if (userData) {
         res.status(200).json(userData);
         return;
@@ -55,3 +55,5 @@ const User = require('../models/User')
     }
   },
  }
+
+//  deleteUser,newFriend,deleteFriend
